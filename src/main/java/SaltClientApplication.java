@@ -16,13 +16,13 @@ void main() throws IOException, URISyntaxException, InterruptedException {
   while (true) {
     Thread.sleep(100); // add small pause
 
-    var currentContent = readClipboard();
+    var currentContent = readFromClipboard();
 
     if (!currentContent.equals(content) && currentContent.startsWith("salt:")) {
       content = currentContent.replace("salt:", "");
 
       var output = translate(content, httpClient);
-      writeClipboard(output);
+      writeToClipboard(output);
       launchNotification();
     }
   }
@@ -52,10 +52,7 @@ private static String translate(String content, HttpClient httpClient) throws UR
   return output;
 }
 
-/**
- * @return Content from clipboard
- */
-String readClipboard() {
+String readFromClipboard() {
   try {
     var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     var transferable = clipboard.getContents(null);
@@ -70,21 +67,14 @@ String readClipboard() {
   }
 }
 
-/**
- * @param input to add in the clipboard
- */
-void writeClipboard(String input) {
+void writeToClipboard(String input) {
   var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
   var data = new StringSelection(input);
   clipboard.setContents(data, data);
 }
 
-/**
- * Native notification system from linux, adapt if you are using other OS
- *
- * @throws IOException
- */
 void launchNotification() throws IOException {
+  // Native notification system from linux, adapt if you are using other OS
   ProcessBuilder builder = new ProcessBuilder(
           "zenity",
           "--notification",
