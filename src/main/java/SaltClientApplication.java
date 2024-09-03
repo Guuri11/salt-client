@@ -48,8 +48,8 @@ private static String translate(String content, HttpClient httpClient) throws UR
 
   var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-  var output = response.body().substring(9, response.body().length() - 2); // response.body() output -> {data: "hola món"}
-  return output;
+  // response.body() output -> {data: "hola món"}
+  return response.body().substring(9, response.body().length() - 2);
 }
 
 String readFromClipboard() {
